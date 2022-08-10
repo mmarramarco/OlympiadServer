@@ -22,13 +22,12 @@ jobs:
           godot_executable_download_url: https://github.com/godotengine/godot/releases/download/3.5-stable/Godot_v3.5-stable_linux_headless.64.zip
           godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/3.5-stable/Godot_v3.5-stable_export_templates.tpz
           relative_project_path: ./
-          archive_output: true
 
       - name: Publish
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          gh release create "v${{github.run_number}}-indev" ${{ steps.export.outputs.archive_directory }}/*.zip --generate-notes
+          gh release create "v${{github.run_number}}-indev" ${{ steps.export.outputs.build_directory }} --generate-notes
       
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
@@ -39,3 +38,8 @@ jobs:
       - name: Adding known hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
         
+      - name: Sending file via RSYNC
+        run: rsync -avz ${{ steps.export.outputs.build_directory }}/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/root/OlympiadServer/
+        
+      - name: Run Remote Server
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} ./startOlympiadServer
