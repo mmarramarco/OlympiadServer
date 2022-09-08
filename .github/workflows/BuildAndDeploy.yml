@@ -22,6 +22,7 @@ jobs:
           godot_executable_download_url: https://github.com/godotengine/godot/releases/download/3.5-stable/Godot_v3.5-stable_linux_headless.64.zip
           godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/3.5-stable/Godot_v3.5-stable_export_templates.tpz
           relative_project_path: ./
+          archive_output: true
 
       - name: Publish
         env:
@@ -35,7 +36,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }}
-          source: "${{ steps.export.outputs.build_directory }}/LinuxX11/*"
+          source: "${{ steps.export.outputs.archive_directory }}/*"
           target: "/root/OlympiadServer"
         
       - name: Run Remote Server
