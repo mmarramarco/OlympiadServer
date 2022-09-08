@@ -31,7 +31,7 @@ jobs:
           gh release create "v${{github.run_number}}-indev" ${{ steps.export.outputs.build_directory }}/LinuxX11/* --generate-notes
       
       - name: copy file via SCP
-        run: scp -r {{ steps.export.outputs.build_directory }}/LinuxX11 {{ secrets.SSH_USER }}@{{ secrets.SSH_HOST }}:/root/OlympiadServer
+        run: scp -r ${{ steps.export.outputs.build_directory }}/LinuxX11 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/root/OlympiadServer
         
       - name: Run Remote Server
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} ./startOlympiadServer
