@@ -29,6 +29,9 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
           gh release create "v${{github.run_number}}-indev" ${{ steps.export.outputs.build_directory }}/LinuxX11/* --generate-notes
+     
+      - name: Remove offending known hosts
+        run: ssh-keygen -R ${{ secrets.SSH_HOST }}
       
       - name: copy file via SCP
         run: scp -r ${{ steps.export.outputs.build_directory }}/LinuxX11 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/root/OlympiadServer
