@@ -38,8 +38,8 @@ jobs:
       - name: Adding known hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
         
-      - name: Sending file via RSYNC
-        run: rsync -avz ${{ steps.export.outputs.build_directory }}/LinuxX11/*/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/root/OlympiadServer/
+      - name: Sending file via SCP
+        run: scp ${{ steps.export.outputs.build_directory }}/LinuxX11/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/root/OlympiadServer
         
       - name: Run Remote Server
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} ./startOlympiadServer
